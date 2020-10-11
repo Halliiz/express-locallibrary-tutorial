@@ -1,0 +1,1 @@
+docker run --name locallibrary-mysql -e MYSQL_ROOT_PASSWORD=root_secret -e MYSQL_DATABASE=locallibrary -e MYSQL_USER=locallibrary -e MYSQL_PASSWORD=locallibrary_secret -d -p 3306:3306 mysql:8
