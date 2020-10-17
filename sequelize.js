@@ -38,20 +38,6 @@ BookInstance.belongsTo(Book);
       error
     );
   }
-
-  const stephen = await Author.create({
-    first_name: "Stephen",
-    family_name: "King",
-  });
-  const fantastique = await Genre.create({ name: "fantastique" });
-  const carrie = await Book.create({
-    title: "Carrie",
-    summary: "Carrie White, dix-sept ans, solitaire, ...",
-    isbn: "978-2253096764",
-  });
-  carrie.setAuthor(stephen);
-  carrie.addGenre(fantastique);
-  await carrie.save();
 })();
 
-module.exports = { Genre, Author, Book };
+module.exports = { Genre, Author, Book, BookInstance };
