@@ -1,11 +1,11 @@
 module.exports = (sequelize, DataTypes) => {
-  const Book = sequelize.define("Book", {
+  const Book = sequelize.define("book", {
     title: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     summary: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
     },
     isbn: {

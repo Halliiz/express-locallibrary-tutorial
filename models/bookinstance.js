@@ -1,7 +1,7 @@
 const moment = require("moment");
 
 module.exports = (sequelize, Sequelize, DataTypes) => {
-  const BookInstance = sequelize.define("BookInstance", {
+  const BookInstance = sequelize.define("bookInstance", {
     imprint: {
       type: DataTypes.STRING,
       allowNull: false,
