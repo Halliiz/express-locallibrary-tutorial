@@ -28,7 +28,7 @@ module.exports = (sequelize) => {
     due_back_formatted: {
       type: DataTypes.VIRTUAL,
       get() {
-        return DateTime.fromISO(this.due_back).toFormat("MMMM Do, YYYY");
+        return DateTime.fromISO(this.due_back).toLocaleString(DateTime.DATE_MED);
       },
     },
     due_back_yyyy_mm_dd: {
