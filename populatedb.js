@@ -4,7 +4,7 @@ console.log(
   "This script populates some test books, authors, genres and bookinstances to your database."
 );
 
-const { sequelize, Author, Book, BookInstance, Genre } = require("./sequelize");
+const { sequelize, Author, Book, BookInstance, Genre } = require("./models/sequelize");
 
 var authors = [];
 var genres = [];
