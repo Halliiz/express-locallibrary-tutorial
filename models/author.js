@@ -1,6 +1,7 @@
-const moment = require("moment");
+const {DateTime} = require("luxon");
+const {DataTypes} = require("sequelize");
 
-module.exports = (sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   const Author = sequelize.define("author", {
     first_name: {
       type: DataTypes.STRING(100),
@@ -33,11 +34,11 @@ module.exports = (sequelize, DataTypes) => {
       get() {
         let lifetime_string = "";
         if (this.date_of_birth) {
-          lifetime_string = moment(this.date_of_birth).format("MMMM Do, YYYY");
+          lifetime_string = DateTime.fromISO(this.date_of_birth).toFormat("MMMM Do, YYYY");
         }
         lifetime_string += " - ";
         if (this.date_of_death) {
-          lifetime_string += moment(this.date_of_death).format("MMMM Do, YYYY");
+          lifetime_string += DateTime.fromISO(this.date_of_death).toFormat("MMMM Do, YYYY");
         }
         return lifetime_string;
       },
@@ -45,13 +46,13 @@ module.exports = (sequelize, DataTypes) => {
     date_of_birth_yyyy_mm_dd: {
       type: DataTypes.VIRTUAL,
       get() {
-        return moment(this.date_of_birth).format("YYYY-MM-DD");
+        return DateTime.fromISO(this.date_of_birth).toFormat("YYYY-MM-DD");
       },
     },
     date_of_death_yyyy_mm_dd: {
       type: DataTypes.VIRTUAL,
       get() {
-        return moment(this.date_of_death).format("YYYY-MM-DD");
+        return DateTime.fromISO(this.date_of_death).toFormat("YYYY-MM-DD");
       },
     }
   });

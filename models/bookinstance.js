@@ -1,6 +1,7 @@
-const moment = require("moment");
+const {DateTime} = require("luxon");
+const {DataTypes, Sequelize} = require("sequelize");
 
-module.exports = (sequelize, Sequelize, DataTypes) => {
+module.exports = (sequelize) => {
   const BookInstance = sequelize.define("bookInstance", {
     imprint: {
       type: DataTypes.STRING,
@@ -27,13 +28,13 @@ module.exports = (sequelize, Sequelize, DataTypes) => {
     due_back_formatted: {
       type: DataTypes.VIRTUAL,
       get() {
-        return moment(this.due_back).format("MMMM Do, YYYY");
+        return DateTime.fromISO(this.due_back).toFormat("MMMM Do, YYYY");
       },
     },
     due_back_yyyy_mm_dd: {
       type: DataTypes.VIRTUAL,
       get() {
-        return moment(this.due_back).format("YYYY-MM-DD");
+        return DateTime.fromISO(this.due_back).toFormat("YYYY-MM-DD");
       },
     },
   });

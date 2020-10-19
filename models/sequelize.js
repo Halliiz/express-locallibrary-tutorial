@@ -14,14 +14,10 @@ const sequelize = new Sequelize(
   }
 );
 
-const Genre = require("./genre")(sequelize, DataTypes);
-const Author = require("./author")(sequelize, DataTypes);
-const Book = require("./book")(sequelize, DataTypes, Model);
-const BookInstance = require("./bookinstance")(
-  sequelize,
-  Sequelize,
-  DataTypes
-);
+const Genre = require("./genre")(sequelize);
+const Author = require("./author")(sequelize);
+const Book = require("./book")(sequelize);
+const BookInstance = require("./bookinstance")(sequelize);
 
 Author.hasMany(Book);
 Book.belongsTo(Author);
