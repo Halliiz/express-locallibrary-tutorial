@@ -5,4 +5,6 @@ This code implements [MDN Local Library tutorial](https://developer.mozilla.org/
 ## Usage
 
 - Copy `config/mysql.json.example` to `config/mysql.json` and adapt to your needs.
-- Execute `npm run serverstart`.
+- Execute `npm run populatedb` once to populate your database with sample data.
+- Execute `npm run serverstart` to run the server in devlopment mode.
+- Navigate to `http://127.0.0.1:3000/`.
