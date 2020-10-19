@@ -25,9 +25,9 @@ const BookInstance = require("./models/bookinstance")(
 
 Author.hasMany(Book);
 Book.belongsTo(Author);
-Book.belongsToMany(Genre, { through: "BookGenres" });
+Book.belongsToMany(Genre, { through: "bookGenres" });
 Book.hasMany(BookInstance);
-Genre.belongsToMany(Book, { through: "BookGenres" });
+Genre.belongsToMany(Book, { through: "bookGenres" });
 BookInstance.belongsTo(Book);
 
 module.exports = { sequelize, Author, Book, BookInstance, Genre };

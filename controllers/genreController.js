@@ -1,13 +1,28 @@
-const { Genre } = require("../sequelize");
+const { Book, Genre } = require("../sequelize");
+const createError = require("http-errors");
 
 // Display list of all Genre.
 exports.genre_list = function (req, res) {
   res.send("NOT IMPLEMENTED: Genre list");
 };
+
 // Display detail page for a specific Genre.
-exports.genre_detail = function (req, res) {
-  res.send("NOT IMPLEMENTED: Genre detail: " + req.params.id);
+exports.genre_detail = async function (req, res, next) {
+  try {
+    const genreId = req.params.id;
+    const genre = await Genre.findByPk(genreId, {
+      include: Book
+    });
+    if (genre !== null) {
+      res.render("genre_detail", { title: "Genre Detail", genre})
+    } else {
+      next(createError(404));
+    }
+  } catch (error) {
+    next(error);
+  }
 };
+
 // Display Genre create form on GET.
 exports.genre_create_get = function (req, res) {
   res.send("NOT IMPLEMENTED: Genre create GET");
