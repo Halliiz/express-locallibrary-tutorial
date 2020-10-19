@@ -1,4 +1,4 @@
-const { Book, BookInstance } = require("../sequelize");
+const { Book, BookInstance } = require("../models/sequelize");
 
 // Display list of all BookInstances.
 exports.bookinstance_list = async function (req, res, next) {

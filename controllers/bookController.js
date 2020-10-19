@@ -1,4 +1,4 @@
-const { Author, Book, BookInstance, Genre } = require("../sequelize");
+const { Author, Book, BookInstance, Genre } = require("../models/sequelize");
 const createError = require("http-errors");
 
 exports.index = async function (req, res, next) {

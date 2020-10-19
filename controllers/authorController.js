@@ -1,4 +1,4 @@
-const { Author } = require("../sequelize");
+const { Author } = require("../models/sequelize");
 
 exports.author_list = async function (req, res, next) {
   try {

@@ -1,4 +1,4 @@
-const config = require(__dirname + "/config/mysql.json");
+const config = require("../config/mysql.json");
 const debug = require("debug")("express-locallibrary-tutorial:sequelize");
 const { Sequelize, DataTypes, Model } = require("sequelize");
 
@@ -14,10 +14,10 @@ const sequelize = new Sequelize(
   }
 );
 
-const Genre = require("./models/genre")(sequelize, DataTypes);
-const Author = require("./models/author")(sequelize, DataTypes);
-const Book = require("./models/book")(sequelize, DataTypes, Model);
-const BookInstance = require("./models/bookinstance")(
+const Genre = require("./genre")(sequelize, DataTypes);
+const Author = require("./author")(sequelize, DataTypes);
+const Book = require("./book")(sequelize, DataTypes, Model);
+const BookInstance = require("./bookinstance")(
   sequelize,
   Sequelize,
   DataTypes

@@ -1,4 +1,4 @@
-const { Book, Genre } = require("../sequelize");
+const { Book, Genre } = require("../models/sequelize");
 const createError = require("http-errors");
 
 // Display list of all Genre.
