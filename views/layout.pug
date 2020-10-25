@@ -22,27 +22,27 @@ html(lang="en")
       .row
         .col-sm-3
           block sidebar
-            ul.sidebar-nav
-              li
-                a(href="/catalog") Home
-              li
-                a(href="/catalog/books") All books
-              li
-                a(href="/catalog/authors") All authors
-              li
-                a(href="/catalog/genres") All genres
-              li
-                a(href="/catalog/bookinstances") All book-instances
-              li
+            ul.nav.flex-column
+              li.nav-item
+                a.nav-link(href="/catalog") Home
+              li.nav-item
+                a.nav-link(href="/catalog/books") All books
+              li.nav-item
+                a.nav-link(href="/catalog/authors") All authors
+              li.nav-item
+                a.nav-link(href="/catalog/genres") All genres
+              li.nav-item
+                a.nav-link(href="/catalog/bookinstances") All book-instances
+              li.nav-item
                 hr
-              li
-                a(href="/catalog/author/create") Create new author
-              li
-                a(href="/catalog/genre/create") Create new genre
-              li
-                a(href="/catalog/book/create") Create new book
-              li
-                a(href="/catalog/bookinstance/create") Create new book instance (copy)
+              li.nav-item
+                a.nav-link(href="/catalog/author/create") Create new author
+              li.nav-item
+                a.nav-link(href="/catalog/genre/create") Create new genre
+              li.nav-item
+                a.nav-link(href="/catalog/book/create") Create new book
+              li.nav-item
+                a.nav-link(href="/catalog/bookinstance/create") Create new book instance (copy)
 
         .col-sm-9
           block content
