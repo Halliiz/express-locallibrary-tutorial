@@ -58,38 +58,70 @@ exports.author_create_post = [
     .isISO8601()
     .toDate(),
   async function (req, res, next) {
-    const errors = validationResult(req);
+    try {
+      const errors = validationResult(req);
 
-    if (!errors.isEmpty()) {
-      res.render("author_form", {
-        title: "Create Author",
-        author: req.body,
-        errors: errors.array()
-       });
-    } else {
-      const author = Author.build({
-        first_name: req.body.first_name,
-        family_name: req.body.family_name
-      });
-      if (req.body.date_of_birth) {
-        author.date_of_birth = req.body.date_of_birth;
+      if (!errors.isEmpty()) {
+        res.render("author_form", {
+          title: "Create Author",
+          author: req.body,
+          errors: errors.array(),
+        });
+      } else {
+        const author = Author.build({
+          first_name: req.body.first_name,
+          family_name: req.body.family_name,
+        });
+        if (req.body.date_of_birth) {
+          author.date_of_birth = req.body.date_of_birth;
+        }
+        if (req.body.date_of_death) {
+          author.date_of_death = req.body.date_of_death;
+        }
+        await author.save();
+        res.redirect(author.url);
       }
-      if (req.body.date_of_death) {
-        author.date_of_death = req.body.date_of_death;
-      }
-      await author.save();
-      res.redirect(author.url);
+    } catch (error) {
+      next(error);
     }
   },
 ];
+
 // Display Author delete form on GET.
-exports.author_delete_get = function (req, res) {
-  res.send("NOT IMPLEMENTED: Author delete GET");
+exports.author_delete_get = async function (req, res, next) {
+  try {
+    const author = await Author.findByPk(req.params.id, {
+      include: Book,
+    });
+    if (author === null) {
+      res.redirect("/catalog/authors");
+    } else {
+      res.render("author_delete", { title: "Delete Author", author });
+    }
+  } catch (error) {
+    next(error);
+  }
 };
+
 // Handle Author delete on POST.
-exports.author_delete_post = function (req, res) {
-  res.send("NOT IMPLEMENTED: Author delete POST");
+exports.author_delete_post = async function (req, res, next) {
+  try {
+    const author = await Author.findByPk(req.params.id, {
+      include: Book,
+    });
+    if (author === null) {
+      next(createError(404, "Author not found"));
+    } else if (author.books.length > 0) {
+      res.render("author_delete", { title: "Delete Author", author });
+    } else {
+      await author.destroy();
+      res.redirect("/catalog/authors");
+    }
+  } catch (error) {
+    next(error);
+  }
 };
+
 // Display Author update form on GET.
 exports.author_update_get = function (req, res) {
   res.send("NOT IMPLEMENTED: Author update GET");
