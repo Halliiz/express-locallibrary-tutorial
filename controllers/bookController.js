@@ -95,7 +95,7 @@ exports.book_create_post = [
   body("summary", "Summary must not be empty.").trim().notEmpty().escape(),
   body("isbn", "ISBN must not be empty").trim().notEmpty().escape(),
   body("genre.*").escape(),
-  async function (req, res, next) {
+  async (req, res, next) => {
     try {
       const errors = validationResult(req);
 
