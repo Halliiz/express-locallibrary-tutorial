@@ -1,5 +1,6 @@
 const { Author, Book, BookInstance, Genre } = require("../models/sequelize");
 const createError = require("http-errors");
+const { body, validationResult } = require("express-validator");
 
 exports.index = async function (req, res, next) {
   try {
@@ -55,7 +56,7 @@ exports.book_detail = async function (req, res, next) {
       include: [Author, Genre, BookInstance],
     });
     if (book !== null) {
-      res.render("book_detail", {title: "Book Detail", book});
+      res.render("book_detail", { title: "Book Detail", book });
     } else {
       next(createError(404, "Book not found"));
     }
@@ -65,13 +66,84 @@ exports.book_detail = async function (req, res, next) {
 };
 
 // Display book create form on GET.
-exports.book_create_get = function (req, res) {
-  res.send("NOT IMPLEMENTED: Book create GET");
+exports.book_create_get = async function (req, res, next) {
+  try {
+    const [authors, genres] = await Promise.all([
+      Author.findAll(),
+      Genre.findAll(),
+    ]);
+    res.render("book_form", { title: "Create Book", authors, genres });
+  } catch (error) {
+    next(error);
+  }
 };
+
 // Handle book create on POST.
-exports.book_create_post = function (req, res) {
-  res.send("NOT IMPLEMENTED: Book create POST");
-};
+exports.book_create_post = [
+  (req, res, next) => {
+    if (!(req.body.genre instanceof Array)) {
+      if (typeof req.body.genre === "undefined") {
+        req.body.genre = [];
+      } else {
+        req.body.genre = new Array(req.body.genre);
+      }
+    }
+    next();
+  },
+  body("title", "Title must not be empty.").trim().notEmpty().escape(),
+  body("author", "Author must not be empty.").trim().notEmpty().escape(),
+  body("summary", "Summary must not be empty.").trim().notEmpty().escape(),
+  body("isbn", "ISBN must not be empty").trim().notEmpty().escape(),
+  body("genre.*").escape(),
+  async function (req, res, next) {
+    try {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        const [authors, genres] = await Promise.all([
+          Author.findAll(),
+          Genre.findAll(),
+        ]);
+        for (let i = 0; i < genres.length; i++) {
+          const genre = genres[i];
+          if (req.body.genre.indexOf(genre.id.toString()) > -1) {
+            genres[i].checked = true;
+          }
+        }
+        res.render("book_form", {
+          title: "Create Book",
+          book: req.body,
+          authors,
+          genres,
+          errors: errors.array(),
+        });
+      } else {
+        const book = await Book.create({
+          title: req.body.title,
+          summary: req.body.summary,
+          isbn: req.body.isbn,
+        });
+        const author = await Author.findByPk(req.body.author);
+        if (author === null) {
+          next(createError(404, "Author not found"));
+        } else {
+          await book.setAuthor(author);
+        }
+        if (req.body.genre.length > 0) {
+          const genres = await Genre.findAll({
+            where: {
+              id: req.body.genre,
+            },
+          });
+          await book.addGenres(genres);
+        }
+        res.redirect(book.url);
+      }
+    } catch (error) {
+      next(error);
+    }
+  },
+];
 // Display book delete form on GET.
 exports.book_delete_get = function (req, res) {
   res.send("NOT IMPLEMENTED: Book delete GET");
