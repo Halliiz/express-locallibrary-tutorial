@@ -1,5 +1,6 @@
 const { Book, BookInstance } = require("../models/sequelize");
 const createError = require("http-errors");
+const { body, validationResult } = require("express-validator");
 
 // Display list of all BookInstances.
 exports.bookinstance_list = async function (req, res, next) {
@@ -33,13 +34,54 @@ exports.bookinstance_detail = async function (req, res, next) {
   }
 };
 // Display BookInstance create form on GET.
-exports.bookinstance_create_get = function (req, res) {
-  res.send("NOT IMPLEMENTED: BookInstance create GET");
+exports.bookinstance_create_get = async function (req, res, next) {
+  try {
+    const books = await Book.findAll();
+    res.render("bookinstance_form", { title: "Create BookInstance", books });
+  } catch (error) {
+    next(error);
+  }
 };
+
 // Handle BookInstance create on POST.
-exports.bookinstance_create_post = function (req, res) {
-  res.send("NOT IMPLEMENTED: BookInstance create POST");
-};
+exports.bookinstance_create_post = [
+  body("book", "Book must be specified").trim().notEmpty().escape(),
+  body("imprint", "Imprint must be specified").trim().notEmpty().escape(),
+  body("status").escape(),
+  body("due_back", "Invalid date")
+    .optional({ checkFalsy: true })
+    .isISO8601()
+    .toDate(),
+  async (req, res, next) => {
+    try {
+      const errors = validationResult(req);
+
+      if (!errors.isEmpty()) {
+        const books = await Book.findAll();
+        res.render("bookinstance_form", {
+          title: "Create BookInstance",
+          bookinstance: req.body,
+          books,
+          errors: errors.array()
+        });
+      } else {
+        const bookinstance = await BookInstance.create({
+          bookId: req.body.book,
+          imprint: req.body.imprint,
+          status: req.body.status
+        });
+        if (req.body.due_back) {
+          bookinstance.due_back = req.body.due_back;
+          await bookinstance.save();
+        }
+        res.redirect(bookinstance.url);
+      }
+    } catch (error) {
+      next(error);
+    }
+  }
+];
+
 // Display BookInstance delete form on GET.
 exports.bookinstance_delete_get = function (req, res) {
   res.send("NOT IMPLEMENTED: BookInstance delete GET");
