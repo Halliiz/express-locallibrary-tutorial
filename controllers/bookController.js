@@ -57,7 +57,7 @@ exports.book_detail = async function (req, res, next) {
     if (book !== null) {
       res.render("book_detail", {title: "Book Detail", book});
     } else {
-      next(createError(404));
+      next(createError(404, "Book not found"));
     }
   } catch (error) {
     next(error);

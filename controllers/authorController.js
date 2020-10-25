@@ -1,9 +1,10 @@
-const { Author } = require("../models/sequelize");
+const { Author, Book } = require("../models/sequelize");
+const createError = require("http-errors");
 
 exports.author_list = async function (req, res, next) {
   try {
     const author_list = await Author.findAll({
-      order: [["family_name", "ASC"]]
+      order: [["family_name", "ASC"]],
     });
     res.render("author_list", { title: "Author List", author_list });
   } catch (error) {
@@ -12,9 +13,20 @@ exports.author_list = async function (req, res, next) {
 };
 
 // Display detail page for a specific Author.
-exports.author_detail = function (req, res) {
-  res.send("NOT IMPLEMENTED: Author detail: " + req.params.id);
+exports.author_detail = async function (req, res, next) {
+  try {
+    const authorId = req.params.id;
+    const author = await Author.findByPk(authorId, { include: Book });
+    if (author !== null) {
+      res.render("author_detail", { title: "Author Detail", author });
+    } else {
+      next(createError(404, "Author not found"));
+    }
+  } catch (error) {
+    next(error);
+  }
 };
+
 // Display Author create form on GET.
 exports.author_create_get = function (req, res) {
   res.send("NOT IMPLEMENTED: Author create GET");

@@ -16,7 +16,7 @@ exports.genre_detail = async function (req, res, next) {
     if (genre !== null) {
       res.render("genre_detail", { title: "Genre Detail", genre})
     } else {
-      next(createError(404));
+      next(createError(404, "Genre not found"));
     }
   } catch (error) {
     next(error);
