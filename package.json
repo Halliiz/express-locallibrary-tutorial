@@ -5,7 +5,11 @@
   "scripts": {
     "start": "node ./bin/www",
     "devstart": "nodemon ./bin/www",
-    "populatedb": "node populatedb.js"
+    "populatedb": "node populatedb.js",
+    "createdb": "docker run --name locallibrary-mysql -e MYSQL_RANDOM_ROOT_PASSWORD=yes -e MYSQL_DATABASE=mydb -e MYSQL_USER=mydb -e MYSQL_PASSWORD=mydb -d -p 3306:3306 mysql:8",
+    "startdb": "docker start locallibrary-mysql",
+    "stopdb": "docker stop locallibrary-mysql",
+    "removedb": "docker rm locallibrary-mysql"
   },
   "dependencies": {
     "cookie-parser": "^1.4.4",

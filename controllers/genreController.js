@@ -3,8 +3,15 @@ const createError = require("http-errors");
 const { body, validationResult } = require("express-validator");
 
 // Display list of all Genre.
-exports.genre_list = function (req, res) {
-  res.send("NOT IMPLEMENTED: Genre list");
+exports.genre_list = async function (req, res, next) {
+  try {
+    const genre_list = await Genre.findAll({
+      order: [["name", "ASC"]],
+    });
+    res.render("genre_list", { title: "Genre List", genre_list });
+  } catch (error) {
+    next(error);
+  }
 };
 
 // Display detail page for a specific Genre.
